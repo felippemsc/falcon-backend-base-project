@@ -2,6 +2,10 @@
 
 This is a base project using The Falcon Web Framework
 
+## TODO: 
+Next: Create and pre-populate db
+
+
 ### Creating the virtual enviroment for the project
 
 On the root directory, type the following command to create a virtual enviroment with the name 'falcon-base', 

@@ -1,0 +1,24 @@
+version: '3'
+services:
+  api:
+    build: .
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: password
+    ports:
+    - "8080:8080"
+
+  database:
+    image: postgres:9.6.6-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  memcached:
+    image: memcached:1.5.8-alpine
+    ports:
+    - "11211:11211"
