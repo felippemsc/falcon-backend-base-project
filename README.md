@@ -3,7 +3,9 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-Next: Create and pre-populate db
+Next: Create and pre-populate db (Fazer com os testes)
+Soon: Change the format of logging.ini
+Soon: Criar message_category model
 
 
 ### Creating the virtual enviroment for the project
