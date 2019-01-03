@@ -3,9 +3,11 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-Next: Create and pre-populate db (Fazer com os testes)
-Soon: Change the format of logging.ini
-Soon: Criar message_category model
+* Next: TDD the POST
+* Create and pre-populate db (Fazer com os testes)
+* Change the format of logging.ini (See the formmating at the tests)
+* Create message_category model
+* Put images at the README
 
 
 ### Creating the virtual enviroment for the project
@@ -20,6 +22,7 @@ To activate the virtual enviorment
 `$ source ~/falcon-base/bin/activate`
 
 ### Configuring PyCharm
+TODO: Add printscreen to better ilustrate
 
 Click on File -> Settings 
 
@@ -32,3 +35,15 @@ Select the 'Existing enviroment' radio button
 On the interpreter field use the following path, changing 'your-root-directory':
 
 `your-root-directory/falcon-base/bin/python3.7`
+
+After that, to properly debug with PyCharm, click on 'Add Configuration...' at the top menu.
+
+Type Alt+Insert and select Python.
+
+At the script path, use the following path, changing 'your-root-directory':
+
+`/your-root-directory/falcon-base/bin/gunicorn`
+
+At parameters:
+
+`-w 2 -b 0.0.0.0:8001 --log-config logging.ini main:app -t 180`

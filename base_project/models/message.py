@@ -7,11 +7,11 @@ Author: Felippe Costa <felippemsc@gmail.com>
 """
 import logging
 
-from sqlalchemy import Integer, Text, DateTime, Boolean, String, func
+from sqlalchemy import Integer, Text, DateTime, Boolean, func
 from sqlalchemy.schema import Column
 from sqlalchemy.ext.declarative import AbstractConcreteBase
 
-from ..database import BASE, DBSESSION
+from ..database import BASE
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
@@ -20,6 +20,7 @@ DATE_FORMAT = "%Y-%m-%d"
 LOG = logging.getLogger(__name__)
 
 
+# pylint: disable=W0511
 class MessageModel(AbstractConcreteBase, BASE):
     """
     Messages
@@ -29,6 +30,9 @@ class MessageModel(AbstractConcreteBase, BASE):
     message = Column("message", Text, nullable=False)
     duration = Column("dur_message", Integer, nullable=True)
     creation_date = Column("dh_message", DateTime, default=func.now())
-    message_category = Column("cat_message", String(5), nullable=False)
+    message_category = Column("cat_message", Text, nullable=False)
     printed_times = Column("prt_message", Integer, default=0)
     printed_once = Column("bol_message", Boolean, default=False)
+
+    # TODO: Program init_from_dict and record_from_dict and
+    # TODO: put in the BaseModel

@@ -1,0 +1,15 @@
+version: '3'
+services:
+  database:
+    image: postgres:9.6.6-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: base_db
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+
+  memcached:
+    image: memcached:1.5.8-alpine
+    ports:
+    - "11211:11211"
