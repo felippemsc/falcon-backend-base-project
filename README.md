@@ -4,6 +4,8 @@ This is a base project using The Falcon Web Framework
 
 ## TODO: 
 * Next: TDD the POST
+    * Tests for the json schema validation and its use
+    * Create a middleware to deal with the exceptions and LOG everything (Put the generic Exception to log there)
 * Create and pre-populate db (Fazer com os testes)
 * Change the format of logging.ini (See the formmating at the tests)
 * Create message_category model

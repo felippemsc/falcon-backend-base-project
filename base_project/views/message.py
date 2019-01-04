@@ -9,6 +9,9 @@ import logging
 
 from falcon import HTTP_CREATED
 
+from ..models.message import MessageModel
+from ..schema.json_schema import SchemaMessage
+
 
 LOG = logging.getLogger()
 
@@ -25,6 +28,12 @@ class MessageCollection:
         API to create new Messages
         """
         payload = request.media
+
+        # TODO: Change the validate to a serialize,
+        # TODO: that will do the validation also and return an initialized model object
+        # TODO: SAVE
+
+        aaa = MessageModel.serialize(payload)
 
         response.status = HTTP_CREATED
         response.body = json.dumps({"payload": payload})
