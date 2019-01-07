@@ -7,6 +7,7 @@ from falcon import testing
 from config import BaseConfig
 
 from base_project import create_app
+from base_project.database import reset_db_for_testing
 
 
 BASE_DIR = Path(__file__).parent.parent
@@ -20,10 +21,11 @@ class BaseTest(testing.TestCase):
 
     def setUp(self):
         """Configure what is necessary for the tests."""
+        reset_db_for_testing(BaseConfig.DATABASE_URI)
         super().setUp()
 
         self.app = create_app(BaseConfig)
-        
+
     def populate_table(self, model, filename):
         records = []
         with open(f'{BASE_DIR}/tests/db_fixtures/{filename}') as f:
@@ -31,4 +33,4 @@ class BaseTest(testing.TestCase):
                 records.append(json.loads(line))
 
         for record in records:
-            result = model.record_from_dict(record)  # TODO: program a record_from_dict func
+            result = model.record_from_dict(record)  # TODO: use the validate and record func

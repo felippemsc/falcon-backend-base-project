@@ -17,15 +17,15 @@ class TestAPIMessage(BaseTest):
         # self.populate_table() TODO
 
     def test_post(self):
-        payload = {
+        message = {
             "message": "Measuring distance",
             "duration": 5,
             "message_category": "Information"
         }
 
         response = self.simulate_post(
-            self.endpoint, json=payload, headers={**self.headears}
+            self.endpoint, json=message, headers={**self.headears}
         )
 
         self.assertEqual(response.status, HTTP_CREATED)
-        self.assertEqual(payload, response.json.get("payload"))
+        self.assertEqual(message, response.json.get("message"))

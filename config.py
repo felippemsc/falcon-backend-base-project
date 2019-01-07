@@ -13,8 +13,8 @@ class BaseConfig:
 
     LOG.info(f'Config Falcon Base Project. Version:{API_VERSION}')
 
-    DB_NAME = os.getenv('DB_ENDPOINT', 'my_db_name')  # TODO
-    DB_SCHEMA = os.getenv('DB_SCHEMA', 'my_db_schema')  # TODO
+    DB_NAME = os.getenv('DB_ENDPOINT', 'base_db')  # TODO
+    DB_SCHEMA = os.getenv('DB_SCHEMA', 'base_schema')  # TODO
     DB_HOST = os.getenv('DB_HOST', 'localhost')
     DB_PORT = os.getenv('DB_PORT', 5432)
     DB_USER = os.getenv('DB_USER', 'postgres')

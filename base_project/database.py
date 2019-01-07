@@ -19,25 +19,10 @@ DBSESSION = scoped_session(sessionmaker())
 LOG = logging.getLogger(__name__)
 
 
-def create_database_if_needed(db_uri):
-    """
-    Cria o banco de dados, se necessário.
-    """
-    if not database_exists(db_uri):
-        LOG.info('Banco de dados inexistente. Iniciando criação...')
-        try:
-            create_database(db_uri)
-        except Exception:
-            LOG.exception('Erro ao criar o Banco de Dados: ')
-            raise
-
-
 def init_db(db_uri):
     """
-    Configura o acesso ao banco de dados.
+    Configures the access to the database.
     """
-    # LOG.info(f"Conectando ao banco de dados '{db_uri}'.")
-
     engine = create_engine(db_uri)
 
     DBSESSION.remove()
@@ -49,23 +34,44 @@ def init_db(db_uri):
     return engine
 
 
-def reset_db(db_uri):
+def create_database_if_needed(db_uri):
     """
-    Reinicializa o banco de dados.
+    Create database if necessary.
     """
-    try:
+    if not database_exists(db_uri):
+        LOG.info('Banco de dados inexistente. Iniciando criação...')
+        try:
+            create_database(db_uri)
+        except Exception:
+            LOG.exception('Erro ao criar o Banco de Dados: ')
+            raise
 
-        engine = init_db(db_uri)
-        BASE.metadata.drop_all(engine)
-        BASE.metadata.create_all(engine)
-        # logging.info('Banco de Dados reinicializado com sucesso.')
-    except Exception:
-        LOG.exception('Erro ao criar o Banco de Dados: ')
 
+def init_db_local(db_uri):
+    """
+    Create local db
+    """
+    create_database_if_needed(db_uri)
+    engine = create_engine(db_uri)
 
-def create_schema():
-    """
-    Cria o schema conta_corrente no banco e impede o problema nos testes.
-    """
+    DBSESSION.remove()
+    DBSESSION.configure(
+        bind=engine, autocommit=False, autoflush=False, expire_on_commit=False)
+
     DBSESSION.execute('CREATE SCHEMA IF NOT EXISTS base_schema')
     DBSESSION.commit()
+
+    BASE.metadata.create_all(engine)
+    return engine
+
+
+def reset_db_for_testing(db_uri):
+    """
+    Resets the db for the tests.
+    """
+    try:
+        engine = init_db_local(db_uri)
+        BASE.metadata.drop_all(engine)
+        BASE.metadata.create_all(engine)
+    except Exception:
+        LOG.exception('Erro ao criar o Banco de Dados: ')

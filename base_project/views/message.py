@@ -10,13 +10,13 @@ import logging
 from falcon import HTTP_CREATED
 
 from ..models.message import MessageModel
-from ..schema.json_schema import SchemaMessage
 
 
 LOG = logging.getLogger()
 
 # pylint: disable=W0511
 # TODO: Create MessageResource and create middleware for auth
+# TODO: Make the json schema validation on the falcon.before
 
 
 class MessageCollection:
@@ -29,11 +29,7 @@ class MessageCollection:
         """
         payload = request.media
 
-        # TODO: Change the validate to a serialize,
-        # TODO: that will do the validation also and return an initialized model object
-        # TODO: SAVE
-
-        aaa = MessageModel.serialize(payload)
+        message = MessageModel.validate_and_record(payload)
 
         response.status = HTTP_CREATED
-        response.body = json.dumps({"payload": payload})
+        response.body = json.dumps({"message": message})  # TODO: serialize the message object
