@@ -5,13 +5,13 @@ App creation
 Author: Felippe Costa <felippemsc@gmail.com>
 """
 import falcon
+from .middleware import SQLAlchemySessionManager, CheckAuth
 from .views import RootResource
 from .views.message import MessageCollection
+from .database import init_db
 
 
-# Use the app_settings to create the db connection, TODO
-# erase the pylint disable bellow TODO
-def create_app(app_settings):  # pylint: disable=W0613
+def create_app(app_settings):
     """
     Application factory
 
@@ -19,7 +19,11 @@ def create_app(app_settings):  # pylint: disable=W0613
     :return: An application Falcon object
     """
     # Application inicialization
-    app = falcon.API()
+    app = falcon.API(
+        middleware=[SQLAlchemySessionManager(), CheckAuth()]
+    )
+
+    init_db(app_settings.DATABASE_URI)
 
     # APIs
     app.add_route('/', RootResource())

@@ -15,8 +15,7 @@ from ..models.message import MessageModel
 LOG = logging.getLogger()
 
 # pylint: disable=W0511
-# TODO: Create MessageResource and create middleware for auth
-# TODO: Make the json schema validation on the falcon.before
+# TODO: Create MessageResource
 
 
 class MessageCollection:
@@ -32,4 +31,4 @@ class MessageCollection:
         message = MessageModel.validate_and_record(payload)
 
         response.status = HTTP_CREATED
-        response.body = json.dumps({"message": message})  # TODO: serialize the message object
+        response.body = json.dumps({"message": message.serialize()})

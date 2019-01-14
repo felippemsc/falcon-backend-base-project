@@ -1,8 +1,9 @@
 import os
 import json
+import base64
 from pathlib import Path
 
-from falcon import testing
+from falcon import testing, HTTP_OK
 
 from config import BaseConfig
 
@@ -11,6 +12,11 @@ from base_project.database import reset_db_for_testing
 
 
 BASE_DIR = Path(__file__).parent.parent
+
+
+def encode_base_auth_header(basic_auth: str):
+    return 'Basic {}'.format(
+        base64.b64encode(basic_auth.encode('utf-8')).decode('utf-8'))
 
 
 class BaseTest(testing.TestCase):

@@ -20,13 +20,17 @@ DATE_FORMAT = "%Y-%m-%d"
 LOG = logging.getLogger(__name__)
 
 
-# pylint: disable=W0511
 class MessageModel(BaseModel):
     """
     Message's Model
     """
     _json_schema = SchemaMessage
     __tablename__ = 'message'
+    serializer_fields = [
+        "id", "message", "duration", "creation_date", "message_category",
+        "printed_times", "printed_once"
+    ]
+
     id = Column("id_message", Integer, primary_key=True, autoincrement=True)
     message = Column("message", Text, nullable=False)
     duration = Column("dur_message", Integer, nullable=True)
@@ -34,6 +38,3 @@ class MessageModel(BaseModel):
     message_category = Column("cat_message", Text, nullable=False)
     printed_times = Column("prt_message", Integer, default=0)
     printed_once = Column("bol_message", Boolean, default=False)
-
-    # TODO: Program init_from_dict and record_from_dict and
-    # TODO: put in the BaseModel
