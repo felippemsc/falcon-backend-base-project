@@ -8,6 +8,8 @@ import logging
 
 import falcon
 
+from .schema.json_schema import InvalidJSON
+
 from .database import DBSESSION
 
 LOG = logging.getLogger(__name__)

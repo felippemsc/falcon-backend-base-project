@@ -1,5 +1,5 @@
 # coding=utf-8
-from falcon import HTTP_CREATED
+from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY
 
 from tests import BaseTest, encode_base_auth_header
 
@@ -39,3 +39,21 @@ class TestAPIMessage(BaseTest):
         self.assertEqual("Measuring distance", resp_message.get('message'))
         self.assertEqual(5, resp_message.get('duration'))
         self.assertEqual("Information", resp_message.get('message_category'))
+
+    def test_post_failed_schema(self):
+        message = {
+            "duration": 5,
+            "message_category": "Information"
+        }
+
+        response = self.simulate_post(
+            self.endpoint, json=message, headers={**self.headers,
+                                                  **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        self.assertEqual(response.status, HTTP_UNPROCESSABLE_ENTITY)
+        #
+        # self.assertEqual(response.status, HTTP_CREATED)
+        # self.assertEqual("Measuring distance", resp_message.get('message'))
+        # self.assertEqual(5, resp_message.get('duration'))
+        # self.assertEqual("Information", resp_message.get('message_category'))

@@ -10,12 +10,10 @@ import logging
 from jsonschema import validate as json_schema_validate
 from jsonschema.exceptions import SchemaError, ValidationError
 
+from ..exceptions import InvalidJSON
+
 
 LOG = logging.getLogger(__name__)
-
-
-class InvalidJSON(Exception):
-    """Exception for invalid JSON Schema"""
 
 
 class Schema:

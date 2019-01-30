@@ -3,8 +3,9 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Next: TDD the POST 
-    * Create a middleware to deal with the exceptions and LOG everything (Put the generic Exception to log there)
+* Next: Check why logging.ini is not found (Play Gunicorn)
+  * Check if dealing with Exceptions are correct (Done before)
+* Check and create logs properly.
 * Create and pre-populate db (Fazer com os testes, populate_table @ tests/__init__)
 * Change the format of logging.ini (See the formmating at the tests)
 * Create message_category model
