@@ -1,7 +1,11 @@
 # coding=utf-8
+import logging
+
 from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY
 
 from tests import BaseTest, encode_base_auth_header
+
+LOG = logging.getLogger()
 
 
 class TestAPIMessage(BaseTest):
@@ -52,8 +56,3 @@ class TestAPIMessage(BaseTest):
         )
 
         self.assertEqual(response.status, HTTP_UNPROCESSABLE_ENTITY)
-        #
-        # self.assertEqual(response.status, HTTP_CREATED)
-        # self.assertEqual("Measuring distance", resp_message.get('message'))
-        # self.assertEqual(5, resp_message.get('duration'))
-        # self.assertEqual("Information", resp_message.get('message_category'))
