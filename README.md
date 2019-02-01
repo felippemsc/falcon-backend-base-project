@@ -8,9 +8,6 @@ This is a base project using The Falcon Web Framework
 * Create and pre-populate db (populate_table @ tests/__init__)
 * Create message_category model
 * Put images at the README
-* Create log of the requests and responses 
-(Better log that, add_handler for Exceptions, Try to log everything using the handlers. 
-In a manner that it says where the request came from)
 
 
 ### Creating the virtual enviroment for the project

@@ -7,7 +7,7 @@ Author: Felippe Costa <felippemsc@gmail.com>
 import falcon
 
 from .database import init_db
-from .exceptions import InvalidJSON
+from .exception_handler import ExceptionHandler
 from .middleware import SQLAlchemySessionManager, CheckAuth
 from .views import RootResource
 from .views.message import MessageCollection
@@ -24,7 +24,7 @@ def create_app(app_settings):
     app = falcon.API(
         middleware=[SQLAlchemySessionManager(), CheckAuth()]
     )
-    app.add_error_handler(Exception, InvalidJSON.handle)
+    app.add_error_handler(Exception, ExceptionHandler.handle)
 
     init_db(app_settings.DATABASE_URI)
 

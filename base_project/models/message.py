@@ -5,8 +5,6 @@ ORM of Base Project: message model.
 
 Author: Felippe Costa <felippemsc@gmail.com>
 """
-import logging
-
 from sqlalchemy import Integer, Text, DateTime, Boolean, func
 from sqlalchemy.schema import Column
 
@@ -15,9 +13,6 @@ from ..schema.json_schema import SchemaMessage
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
-
-
-LOG = logging.getLogger(__name__)
 
 
 class MessageModel(BaseModel):

@@ -5,15 +5,12 @@ JSON Schemas.
 
 Author: Felippe Costa <felippemsc@gmail.com>
 """
-import logging
-
 from jsonschema import validate as json_schema_validate
 from jsonschema.exceptions import SchemaError, ValidationError
 
-from ..exceptions import InvalidJSON
 
-
-LOG = logging.getLogger(__name__)
+class InvalidJSON(Exception):
+    """Exception raised for invalid json schema"""
 
 
 class Schema:
@@ -38,11 +35,9 @@ class Schema:
             json_schema_validate(record, schema_dict)
             return
         except SchemaError as err:
-            LOG.exception("Error on the schema: ")
             raise InvalidJSON(f"JSON Schema '{cls.schema_dict}', of class "
                               f"'{cls.__name__}', is invalid: '{err}'.")
         except ValidationError as err:
-            LOG.exception("Error on the validation: ")
             raise InvalidJSON(f"Record '{record}' is not valid: '{err}'.")
 
 

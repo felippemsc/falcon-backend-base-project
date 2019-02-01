@@ -5,7 +5,6 @@ Base Models
 
 Author: Felippe Costa <felippemsc@gmail.com>
 """
-import logging
 from datetime import datetime, date
 from decimal import Decimal
 
@@ -14,10 +13,13 @@ from sqlalchemy.exc import IntegrityError
 
 from ..database import BASE, DBSESSION
 
-LOG = logging.getLogger(__name__)
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
+
+
+class CommitException(Exception):
+    """Exception during the Commit"""
 
 
 class BaseModel(AbstractConcreteBase, BASE):
@@ -58,8 +60,7 @@ class BaseModel(AbstractConcreteBase, BASE):
         result = instance.commit()
         if not result:
             msg = 'Unexpected trouble when commiting record to the database.'
-            LOG.exception(msg)
-            raise Exception(msg)
+            raise CommitException(msg)
 
         return instance
 
@@ -95,6 +96,6 @@ class BaseModel(AbstractConcreteBase, BASE):
 
             return True
         except IntegrityError:
-            LOG.exception("Integrity Violation: ")
             DBSESSION.rollback()
-            raise
+            raise CommitException(f"Integrity Violation: "
+                                  f"{str(IntegrityError)}")

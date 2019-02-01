@@ -39,11 +39,11 @@ def create_database_if_needed(db_uri):
     Create database if necessary.
     """
     if not database_exists(db_uri):
-        LOG.info('Banco de dados inexistente. Iniciando criação...')
+        LOG.info('Nonexistent Database. Creating...')
         try:
             create_database(db_uri)
         except Exception:
-            LOG.exception('Erro ao criar o Banco de Dados: ')
+            LOG.exception('Error at creating the Database: ')
             raise
 
 
@@ -74,4 +74,4 @@ def reset_db_for_testing(db_uri):
         BASE.metadata.drop_all(engine)
         BASE.metadata.create_all(engine)
     except Exception:
-        LOG.exception('Erro ao criar o Banco de Dados: ')
+        LOG.exception('Error at creating the Database: ')
