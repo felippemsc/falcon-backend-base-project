@@ -8,8 +8,9 @@ import logging
 
 import falcon
 
-from .schema.json_schema import InvalidJSON
+from sqlalchemy.exc import IntegrityError
 
+from .schema.json_schema import InvalidJSON
 from .middleware import UnauthorizedException
 from .models import CommitException
 
@@ -25,6 +26,7 @@ class ExceptionHandler(Exception):
         Removes the active session, doing rollback
         if the request was not successful
         """
+        # TODO: Improve and check the log messages
         logger = logging.getLogger()
         log_msg = f"{req.method} for {req.relative_uri} {cls.get_payload(req)}"
 
@@ -37,6 +39,9 @@ class ExceptionHandler(Exception):
         elif isinstance(ex, CommitException):
             logger.exception("Error during the commit when handling %s", log_msg)  # noqa
             ex = falcon.HTTPInternalServerError()
+        elif isinstance(ex, IntegrityError):
+            logger.exception("Database integrity error violation when handling %s", log_msg)  # noqa
+            ex = falcon.HTTPBadRequest(description=str(ex.orig.pgerror))
         else:
             logger.exception("Unexpected Error during handling the %s: ", log_msg)  # noqa
             ex = falcon.HTTPInternalServerError()

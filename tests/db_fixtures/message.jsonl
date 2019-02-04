@@ -1,2 +1,2 @@
-{"message": "Welcome to IoT", "dur_message": 10, "cat_message": "Information"}
-{"message": "Measuring ambient temperature", "dur_message": 5, "cat_message": "Information"}
+{"message": "Welcome to IoT", "duration": 10, "message_category": "Information"}
+{"message": "Measuring ambient temperature", "duration": 5, "message_category": "Information"}

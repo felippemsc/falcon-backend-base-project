@@ -97,5 +97,4 @@ class BaseModel(AbstractConcreteBase, BASE):
             return True
         except IntegrityError:
             DBSESSION.rollback()
-            raise CommitException(f"Integrity Violation: "
-                                  f"{str(IntegrityError)}")
+            raise

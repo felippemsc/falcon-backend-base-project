@@ -5,8 +5,8 @@ This is a base project using The Falcon Web Framework
 ## TODO: 
 * Next: Develop the rest of the message's APIs
 * Make the tests for the message's APIs
-* Create and pre-populate db (populate_table @ tests/__init__)
 * Create message_category model
+* Check and improve log messages (Rethink the Exception Handlers)
 * Put images at the README
 
 

@@ -9,7 +9,7 @@ import logging
 
 from falcon import HTTP_CREATED
 
-from ..models.message import MessageModel
+from ..models.message import Message
 
 
 LOG = logging.getLogger()
@@ -28,7 +28,7 @@ class MessageCollection:
         """
         payload = request.media
 
-        message = MessageModel.validate_and_record(payload)
+        message = Message.validate_and_record(payload)
 
         response.status = HTTP_CREATED
         response.body = json.dumps({"message": message.serialize()})

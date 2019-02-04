@@ -15,7 +15,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
 
 
-class MessageModel(BaseModel):
+class Message(BaseModel):
     """
     Message's Model
     """
@@ -27,7 +27,7 @@ class MessageModel(BaseModel):
     ]
 
     id = Column("id_message", Integer, primary_key=True, autoincrement=True)
-    message = Column("message", Text, nullable=False)
+    message = Column("message", Text, nullable=False, unique=True)
     duration = Column("dur_message", Integer, nullable=True)
     creation_date = Column("dh_message", DateTime, default=func.now())
     message_category = Column("cat_message", Text, nullable=False)

@@ -5,7 +5,7 @@ from tests import BaseTest
 
 
 class TestAPIRoot(BaseTest):
-    def test_root(self):
+    def test_healthcheck(self):
         response = self.simulate_get('/')
 
         self.assertEqual(response.status, HTTP_OK)

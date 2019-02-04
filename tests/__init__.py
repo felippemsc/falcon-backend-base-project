@@ -63,4 +63,4 @@ class BaseTest(testing.TestCase):
                 records.append(json.loads(line))
 
         for record in records:
-            result = model.record_from_dict(record)  # TODO: use the validate and record func
+            model.validate_and_record(record)
