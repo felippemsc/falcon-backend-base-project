@@ -41,6 +41,20 @@ class Schema:
             raise InvalidJSON(f"Record '{record}' is not valid: '{err}'.")
 
 
+class SchemaBaseQuery(Schema):
+    """
+    JSON Schema that represents the base query string.
+    """
+    schema_dict = {
+        "$json_schema": "http://json-json_schema.org/json_schema#",
+        "type": "object",
+        "properties": {
+            "limit": {"type": "string"},
+            "offset": {"type": "string"},
+        }
+    }
+
+
 class SchemaMessage(Schema):
     """
     JSON Schema that represents a Message.

@@ -9,7 +9,7 @@ from sqlalchemy import Integer, Text, DateTime, Boolean, func
 from sqlalchemy.schema import Column
 
 from ..models import BaseModel
-from ..schema.json_schema import SchemaMessage
+from ..schema.json_schema import SchemaBaseQuery, SchemaMessage
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
@@ -20,6 +20,7 @@ class Message(BaseModel):
     Message's Model
     """
     _json_schema = SchemaMessage
+    _query_schema = SchemaBaseQuery
     __tablename__ = 'message'
     serializer_fields = [
         "id", "message", "duration", "creation_date", "message_category",

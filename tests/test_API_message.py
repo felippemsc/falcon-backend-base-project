@@ -1,7 +1,7 @@
 # coding=utf-8
 import logging
 
-from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY, HTTP_BAD_REQUEST
+from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY, HTTP_BAD_REQUEST, HTTP_OK, HTTP_NOT_FOUND
 
 from base_project.models.message import Message
 
@@ -89,9 +89,58 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(5, resp_message.get('duration'))
         self.assertEqual("Information", resp_message.get('message_category'))
 
-    # TODO get collection
-    # TODO unauthorized
-    # TODO get no results
-    # TODO get one result
-    # TODO get many results
-    # TODO pagination (limit e offset)
+    def test_get_unauthorized(self):
+        response = self.simulate_get(self.endpoint, headers={**self.headers})
+
+        self.assertEqual(401, response.status_code)
+
+    def test_get_collection(self):
+        response = self.simulate_get(self.endpoint, headers={**self.headers,
+                                                             **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("messages", response.json)
+        self.assertEqual(2, len(response.json.get('messages')))
+
+        message = {
+            "message": "Measuring distance",
+            "duration": 5,
+            "message_category": "Information"
+        }
+
+        response = self.simulate_post(
+            self.endpoint, json=message, headers={**self.headers,
+                                                  **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+        self.assertEqual(response.status, HTTP_CREATED)
+
+        response = self.simulate_get(self.endpoint, headers={**self.headers,
+                                                             **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("messages", response.json)
+        self.assertEqual(3, len(response.json.get('messages')))
+
+    def test_get_collection_limit(self):
+        response = self.simulate_get(self.endpoint, query_string="limit=1",
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("messages", response.json)
+        self.assertEqual(1, len(response.json.get('messages')))
+
+    def test_get_collection_offset(self):
+        response = self.simulate_get(self.endpoint, query_string="offset=0",
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("messages", response.json)
+        self.assertEqual(2, len(response.json.get('messages')))
+
+    def test_get_collection_not_found(self):
+        response = self.simulate_get(self.endpoint, query_string="offset=2",
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_NOT_FOUND)
+        self.assertIn("messages", response.json)
+        self.assertEqual(0, len(response.json.get('messages')))

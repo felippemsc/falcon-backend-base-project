@@ -26,7 +26,8 @@ class BaseModel(AbstractConcreteBase, BASE):
     """
     Base Model
     """
-    __json_schema = None
+    _json_schema = None
+    _query_schema = None
     __tablename__ = None
     serializer_fields = None
 
@@ -63,6 +64,42 @@ class BaseModel(AbstractConcreteBase, BASE):
             raise CommitException(msg)
 
         return instance
+
+    @classmethod
+    def get_list(cls, url_params: dict):
+        """
+        Retrives all the records of a model's table
+
+        :return: list of instances
+        """
+        cls._query_schema.validate(url_params)
+
+        limit = url_params.get('limit')
+        offset = url_params.get('offset')
+
+        if limit is None or int(limit) > 100:
+            limit = 100
+
+        instance_list = DBSESSION.query(cls)
+        instance_list = instance_list.order_by(cls.id)
+        instance_list = instance_list.offset(offset)
+        instance_list = instance_list.limit(limit)
+        instance_list = instance_list.all()
+
+        return cls.serialize_list(instance_list)
+
+    @staticmethod
+    def serialize_list(list_of_instances):
+        """
+        Serializes a list of instances
+
+        :return: list of dicts
+        """
+        serialized_list = []
+        for instance in list_of_instances:
+            serialized_list.append(instance.serialize())
+
+        return serialized_list
 
     def serialize(self):
         """
