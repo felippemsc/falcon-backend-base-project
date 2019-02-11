@@ -89,7 +89,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(5, resp_message.get('duration'))
         self.assertEqual("Information", resp_message.get('message_category'))
 
-    def test_get_unauthorized(self):
+    def test_get_collection_unauthorized(self):
         response = self.simulate_get(self.endpoint, headers={**self.headers})
 
         self.assertEqual(401, response.status_code)
@@ -144,3 +144,22 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_NOT_FOUND)
         self.assertIn("messages", response.json)
         self.assertEqual(0, len(response.json.get('messages')))
+
+    def test_get_resource_unauthorized(self):
+        response = self.simulate_get(f'{self.endpoint}/1', headers={**self.headers})
+
+        self.assertEqual(401, response.status_code)
+
+    def test_get_resource(self):
+        response = self.simulate_get(f'{self.endpoint}/1',
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("message", response.json)
+
+    def test_get_resource_not_found(self):
+        response = self.simulate_get(f'{self.endpoint}/999',
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_NOT_FOUND)
+        self.assertIsNone(response.json.get('message'))

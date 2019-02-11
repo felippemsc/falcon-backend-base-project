@@ -68,9 +68,9 @@ class BaseModel(AbstractConcreteBase, BASE):
     @classmethod
     def get_list(cls, url_params: dict):
         """
-        Retrives all the records of a model's table
+        Retrives the records of a model's table paginated with limit and offset
 
-        :return: list of instances
+        :return: serialized list of instances
         """
         cls._query_schema.validate(url_params)
 
@@ -87,6 +87,20 @@ class BaseModel(AbstractConcreteBase, BASE):
         instance_list = instance_list.all()
 
         return cls.serialize_list(instance_list)
+
+    @classmethod
+    def get_by_id(cls, id_: int):
+        """
+        Retrives a record by its id
+
+        :param id_:
+        :return: serialized instance
+        """
+        query = DBSESSION.query(cls)
+        instance = query.get(id_)
+        if not instance:
+            return None
+        return instance.serialize()
 
     @staticmethod
     def serialize_list(list_of_instances):

@@ -19,7 +19,7 @@ LOG = logging.getLogger()
 
 class MessageCollection:
     """
-    API for the Collection of Messages
+    Collection of Messages
     """
     def on_post(self, request, response):
         """
@@ -43,3 +43,18 @@ class MessageCollection:
             response.status = HTTP_NOT_FOUND
 
         response.body = json.dumps({"messages": messages})
+
+
+class MessageResource:
+    """
+    Resource of a Message
+    """
+    def on_get(self, request, response, id_):  # pylint: disable=W0613
+        """
+        API to retrieve one message by its id
+        """
+        message = Message.get_by_id(id_)
+        if not message:
+            response.status = HTTP_NOT_FOUND
+
+        response.body = json.dumps({"message": message})

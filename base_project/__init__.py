@@ -10,7 +10,7 @@ from .database import init_db
 from .exception_handler import ExceptionHandler
 from .middleware import SQLAlchemySessionManager, CheckAuth
 from .views import RootResource
-from .views.message import MessageCollection
+from .views.message import MessageCollection, MessageResource
 
 
 def create_app(app_settings):
@@ -31,5 +31,6 @@ def create_app(app_settings):
     # APIs
     app.add_route('/', RootResource())
     app.add_route('/message', MessageCollection())
+    app.add_route('/message/{id_:int}', MessageResource())
 
     return app
