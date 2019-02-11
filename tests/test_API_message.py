@@ -162,4 +162,22 @@ class TestAPIMessage(BaseTest):
                                      headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
 
         self.assertEqual(response.status, HTTP_NOT_FOUND)
-        self.assertIsNone(response.json.get('message'))
+
+    def test_delete_unauthorized(self):
+        response = self.simulate_delete(f'{self.endpoint}/1', headers={**self.headers})
+
+        self.assertEqual(401, response.status_code)
+
+    def test_delete(self):
+        response = self.simulate_delete(f'{self.endpoint}/1',
+                                        headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("msg", response.json)
+        self.assertIn("message", response.json)
+
+    def test_delete_invalid_id(self):
+        response = self.simulate_delete(f'{self.endpoint}/999',
+                                        headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_NOT_FOUND)

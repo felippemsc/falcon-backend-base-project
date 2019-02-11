@@ -98,9 +98,7 @@ class BaseModel(AbstractConcreteBase, BASE):
         """
         query = DBSESSION.query(cls)
         instance = query.get(id_)
-        if not instance:
-            return None
-        return instance.serialize()
+        return instance
 
     @staticmethod
     def serialize_list(list_of_instances):
@@ -149,3 +147,11 @@ class BaseModel(AbstractConcreteBase, BASE):
         except IntegrityError:
             DBSESSION.rollback()
             raise
+
+    def delete(self):
+        """
+        Deletes a record from the database
+        """
+        DBSESSION.delete(self)
+        DBSESSION.commit()
+        return

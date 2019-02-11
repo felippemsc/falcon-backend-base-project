@@ -14,8 +14,6 @@ from ..models.message import Message
 
 LOG = logging.getLogger()
 
-# TODO: Create MessageResource
-
 
 class MessageCollection:
     """
@@ -56,5 +54,27 @@ class MessageResource:
         message = Message.get_by_id(id_)
         if not message:
             response.status = HTTP_NOT_FOUND
+            return
 
-        response.body = json.dumps({"message": message})
+        response.body = json.dumps({"message": message.serialize()})
+
+    def on_delete(self, request, response, id_):  # pylint: disable=W0613
+        """
+        API to delete one message by its id
+        """
+        message = Message.get_by_id(id_)
+        if not message:
+            response.status = HTTP_NOT_FOUND
+            return
+
+        message.delete()
+
+        msg = f"Record with id: {id_} was successfully deleted"
+        response.body = json.dumps({"msg": msg,
+                                    "message": message.serialize()})
+
+    # TODO: Patch method
+    def on_patch(self, request, response, id_):  # pylint: disable=W0613
+        """
+        API that updates one message by its id
+        """
