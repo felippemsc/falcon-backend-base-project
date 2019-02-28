@@ -181,3 +181,28 @@ class TestAPIMessage(BaseTest):
                                         headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
 
         self.assertEqual(response.status, HTTP_NOT_FOUND)
+
+    def test_patch_unauthorized(self):
+        response = self.simulate_patch(self.endpoint, headers={**self.headers})
+
+        self.assertEqual(401, response.status_code)
+
+    def test_patch_successful(self):
+        message = {
+            "message": "Patch Test",
+            "duration": 999
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/1', json=message, headers={**self.headers,
+                                                         **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        resp_message = response.json.get('message')
+
+        self.assertEqual(response.status, HTTP_CREATED)
+        self.assertEqual("Patch Test", resp_message.get('message'))
+        self.assertEqual(999, resp_message.get('duration'))
+        self.assertEqual("Information", resp_message.get('message_category'))
+
+    # TODO: improve the test patch

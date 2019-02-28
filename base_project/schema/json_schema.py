@@ -20,16 +20,21 @@ class Schema:
     schema_dict = None
 
     @classmethod
-    def validate(cls, record: dict):
+    def validate(cls, record: dict, drop_required_fields: bool = False):
         """
         Validate a record (json or dict) against a json schema.
 
+        :param drop_required_fields: if True drops the required fieds of
+                                     the Schema validator
         :param record: dict of values
         """
-        schema_dict = cls.schema_dict
+        schema_dict = cls.schema_dict.copy()
         if schema_dict is None:
             raise InvalidJSON(f"JSON Schema not defined for the class "
                               f"'{cls.__name__}'")
+
+        if drop_required_fields:
+            schema_dict.pop("required", None)
 
         try:
             json_schema_validate(record, schema_dict)

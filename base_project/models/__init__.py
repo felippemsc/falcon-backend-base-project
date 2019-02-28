@@ -18,10 +18,6 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"
 
 
-class CommitException(Exception):
-    """Exception during the Commit"""
-
-
 class BaseModel(AbstractConcreteBase, BASE):
     """
     Base Model
@@ -34,7 +30,7 @@ class BaseModel(AbstractConcreteBase, BASE):
     @classmethod
     def validate_and_init(cls, data: dict):
         """
-        Validates and instancieates an object class using the dict values.
+        Validates and instanciates an object class using the dict values.
 
         :param data: dictonary with data
         :return: instanciated object
@@ -58,11 +54,27 @@ class BaseModel(AbstractConcreteBase, BASE):
         """
         instance = cls.validate_and_init(data)
 
-        result = instance.commit()
-        if not result:
-            msg = 'Unexpected trouble when commiting record to the database.'
-            raise CommitException(msg)
+        instance.commit()
+        return instance
 
+    @classmethod
+    def validate_and_update(cls, data: dict, id_: int):
+        """
+        Validates and updates a new registry
+        :param data: dictonary with data
+        :param id_: Identifier
+        :return: instanciated object
+        """
+        cls._json_schema.validate(data, drop_required_fields=True)
+
+        instance = cls.get_by_id(id_)
+        for key in data:
+            model_att = getattr(instance.__class__, key, None)
+            value = data.get(key)
+
+            setattr(instance, key, type(model_att.type.python_type())(value))
+
+        instance.commit()
         return instance
 
     @classmethod
@@ -142,8 +154,6 @@ class BaseModel(AbstractConcreteBase, BASE):
         try:
             DBSESSION.add(self)
             DBSESSION.commit()
-
-            return True
         except IntegrityError:
             DBSESSION.rollback()
             raise
@@ -154,4 +164,3 @@ class BaseModel(AbstractConcreteBase, BASE):
         """
         DBSESSION.delete(self)
         DBSESSION.commit()
-        return

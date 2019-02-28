@@ -3,7 +3,7 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Next: Develop the rest of the message's APIs
+* Extend tests on patch message
 * Make the tests for the message's APIs
 * Create message_category model
 * Check and improve log messages (Rethink the Exception Handlers)

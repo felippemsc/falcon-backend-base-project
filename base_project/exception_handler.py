@@ -12,7 +12,6 @@ from sqlalchemy.exc import IntegrityError
 
 from .schema.json_schema import InvalidJSON
 from .middleware import UnauthorizedException
-from .models import CommitException
 
 
 # pylint: disable=C0301
@@ -36,9 +35,6 @@ class ExceptionHandler(Exception):
         elif isinstance(ex, UnauthorizedException):
             logger.exception("Unauthorized Error of request on %s: ", log_msg)
             ex = falcon.HTTPUnauthorized(description=str(ex))
-        elif isinstance(ex, CommitException):
-            logger.exception("Error during the commit when handling %s", log_msg)  # noqa
-            ex = falcon.HTTPInternalServerError()
         elif isinstance(ex, IntegrityError):
             logger.exception("Database integrity error violation when handling %s", log_msg)  # noqa
             ex = falcon.HTTPBadRequest(description=str(ex.orig.pgerror))

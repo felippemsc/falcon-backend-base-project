@@ -73,8 +73,13 @@ class MessageResource:
         response.body = json.dumps({"msg": msg,
                                     "message": message.serialize()})
 
-    # TODO: Patch method
     def on_patch(self, request, response, id_):  # pylint: disable=W0613
         """
         API that updates one message by its id
         """
+        payload = request.media
+
+        message = Message.validate_and_update(payload, id_)
+
+        response.status = HTTP_CREATED
+        response.body = json.dumps({"message": message.serialize()})
