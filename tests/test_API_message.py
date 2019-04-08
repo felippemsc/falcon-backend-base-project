@@ -205,4 +205,61 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(999, resp_message.get('duration'))
         self.assertEqual("Information", resp_message.get('message_category'))
 
+        message = {
+            "duration": 123
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/1', json=message, headers={**self.headers,
+                                                         **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        resp_message = response.json.get('message')
+
+        self.assertEqual(response.status, HTTP_CREATED)
+        self.assertEqual("Patch Test", resp_message.get('message'))
+        self.assertEqual(123, resp_message.get('duration'))
+        self.assertEqual("Information", resp_message.get('message_category'))
+
+    def test_patch_invalid_id(self):
+        message = {
+            "message": "Patch Test",
+            "duration": 999
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/999', json=message, headers={**self.headers,
+                                                           **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        self.assertEqual(response.status, HTTP_NOT_FOUND)
+
+    def test_patch_invalid_field(self):
+        message = {
+            "duration": "5",
+            "message_category": "Information"
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/1', json=message, headers={**self.headers,
+                                                         **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        self.assertEqual(response.status, HTTP_UNPROCESSABLE_ENTITY)
+        self.assertIn("description", response.json)
+
+    def test_patch_message_already_exists(self):
+        message = {
+            "message": "Welcome to IoT",
+            "duration": 5
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/2', json=message, headers={**self.headers,
+                                                         **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        self.assertEqual(response.status, HTTP_BAD_REQUEST)
+        self.assertIn("description", response.json)
+
     # TODO: improve the test patch

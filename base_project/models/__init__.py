@@ -57,25 +57,21 @@ class BaseModel(AbstractConcreteBase, BASE):
         instance.commit()
         return instance
 
-    @classmethod
-    def validate_and_update(cls, data: dict, id_: int):
+    def validate_and_update(self, data: dict):
         """
         Validates and updates a new registry
         :param data: dictonary with data
-        :param id_: Identifier
         :return: instanciated object
         """
-        cls._json_schema.validate(data, drop_required_fields=True)
+        self._json_schema.validate(data, drop_required_fields=True)
 
-        instance = cls.get_by_id(id_)
         for key in data:
-            model_att = getattr(instance.__class__, key, None)
+            model_att = getattr(self.__class__, key, None)
             value = data.get(key)
 
-            setattr(instance, key, type(model_att.type.python_type())(value))
+            setattr(self, key, type(model_att.type.python_type())(value))
 
-        instance.commit()
-        return instance
+        self.commit()
 
     @classmethod
     def get_list(cls, url_params: dict):

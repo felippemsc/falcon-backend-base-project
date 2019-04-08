@@ -79,7 +79,12 @@ class MessageResource:
         """
         payload = request.media
 
-        message = Message.validate_and_update(payload, id_)
+        message = Message.get_by_id(id_)
+        if not message:
+            response.status = HTTP_NOT_FOUND
+            return
+
+        message.validate_and_update(payload)
 
         response.status = HTTP_CREATED
         response.body = json.dumps({"message": message.serialize()})
