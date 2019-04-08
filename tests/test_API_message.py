@@ -261,5 +261,3 @@ class TestAPIMessage(BaseTest):
 
         self.assertEqual(response.status, HTTP_BAD_REQUEST)
         self.assertIn("description", response.json)
-
-    # TODO: improve the test patch

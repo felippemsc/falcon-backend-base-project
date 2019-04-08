@@ -28,11 +28,11 @@ class Schema:
                                      the Schema validator
         :param record: dict of values
         """
-        schema_dict = cls.schema_dict.copy()
-        if schema_dict is None:
+        if cls.schema_dict is None:
             raise InvalidJSON(f"JSON Schema not defined for the class "
                               f"'{cls.__name__}'")
 
+        schema_dict = cls.schema_dict.copy()
         if drop_required_fields:
             schema_dict.pop("required", None)
 

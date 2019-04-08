@@ -3,10 +3,10 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Extend tests on patch message
-* Make the tests for the message's APIs
+* Abstract and finish the TestDabase class
 * Create message_category model
 * Check and improve log messages (Rethink the Exception Handlers)
+* Create CI script
 * Put images at the README
 
 

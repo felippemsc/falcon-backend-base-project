@@ -134,10 +134,6 @@ class BaseModel(AbstractConcreteBase, BASE):
 
             if isinstance(instance_value, datetime):
                 instance_value = instance_value.strftime(DATETIME_FORMAT)
-            if isinstance(instance_value, date):
-                instance_value = instance_value.strftime(DATE_FORMAT)
-            if isinstance(instance_value, Decimal):
-                instance_value = str(instance_value)
 
             result[key] = instance_value
 
