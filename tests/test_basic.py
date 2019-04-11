@@ -2,13 +2,14 @@
 import falcon
 import logging
 
-from falcon import testing
+from unittest.mock import patch
+
 from sqlalchemy.exc import NoSuchModuleError
 
 from base_project.exception_handler import ExceptionHandler
-from base_project.database import reset_db_for_testing
+from base_project.database import reset_db_for_testing, create_database_if_needed
 
-from tests import BaseTest
+from tests import BaseTest, TestLogger
 
 LOG = logging.getLogger()
 
@@ -34,38 +35,22 @@ class TestExceptionHandler(BaseTest):
             self.assertTrue(isinstance(err, falcon.HTTPInternalServerError))
 
 
-class TestDatabase(testing.TestCase):
+class TestDatabaseModule(TestLogger):
     """
     Class for testing the database interactions
     """
-    tests_handler = BaseTest.tests_handler
-    logging.basicConfig(
-        format=("\n%(asctime)s [%(levelname)s] "
-                "[%(module)s:%(funcName)s:%(lineno)s] "
-                "[%(threadName)s-%(thread)d] \n%(message)s"),
-        datefmt="%Y-%m-%d %H:%M:%S")
-
-    def set_logging(self):
-        """
-        Configures the log for testing.
-
-        To cleanner output the level is set to the highest.
-
-        Level could be changed for more details during the tests.
-
-        It is possible to override this fucntion to change the log level for specific tests.
-        """
-        LOG.level = logging.CRITICAL
-        LOG.addHandler(self.tests_handler)
-
     def setUp(self):
         """Configure what is necessary for the tests."""
         super().setUp()
         self.set_logging()
 
-    # TODO: create the test for initing the db (mock database_exists and create_database)
-    def test_init_db(self):
-        pass
+    @patch('base_project.database.database_exists')
+    def test_init_db(self, mock_database_exists):
+        mock_database_exists.return_value = False
+        try:
+            create_database_if_needed('abc://xyz:123@localhost:5432/ijk')
+        except Exception as err:
+            self.assertTrue(isinstance(err, NoSuchModuleError))
 
     def test_reset_db(self):
         try:

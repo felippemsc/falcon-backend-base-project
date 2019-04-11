@@ -22,12 +22,10 @@ def encode_base_auth_header(basic_auth: str):
         base64.b64encode(basic_auth.encode('utf-8')).decode('utf-8'))
 
 
-class BaseTest(testing.TestCase):
+class TestLogger(testing.TestCase):
     """
-    Main class for unit tests
+    Main class to deal with logs during tests
     """
-    dir_ = os.path.dirname(__file__)
-
     tests_handler = logging.StreamHandler(sys.stdout)
     logging.basicConfig(
         format=("\n%(asctime)s [%(levelname)s] "
@@ -50,10 +48,21 @@ class BaseTest(testing.TestCase):
 
     def setUp(self):
         """Configure what is necessary for the tests."""
+        super().setUp()
+        self.set_logging()
+
+
+class BaseTest(TestLogger):
+    """
+    Main class for unit tests
+    """
+    dir_ = os.path.dirname(__file__)
+
+    def setUp(self):
+        """Configure what is necessary for the tests."""
         reset_db_for_testing(BaseConfig.DATABASE_URI)
         super().setUp()
 
-        self.set_logging()
         self.app = create_app(BaseConfig)
 
     def populate_table(self, model, filename):

@@ -3,7 +3,6 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Abstract and finish the TestDabase class
 * Create message_category model
 * Check and improve log messages (Rethink the Exception Handlers)
 * Create CI script
