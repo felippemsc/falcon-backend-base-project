@@ -3,7 +3,9 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Create message_category model
+* Nest message and category 
+* Include url
+* Add features for printed_times and printed_once
 * Check and improve log messages (Rethink the Exception Handlers)
 * Create CI script
 * Put images at the README

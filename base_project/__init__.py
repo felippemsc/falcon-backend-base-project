@@ -10,6 +10,7 @@ from .database import init_db
 from .exception_handler import ExceptionHandler
 from .middleware import SQLAlchemySessionManager, CheckAuth
 from .views import RootResource
+from .views.category import CategoryCollection, CategoryResource
 from .views.message import MessageCollection, MessageResource
 
 
@@ -30,6 +31,8 @@ def create_app(app_settings):
 
     # APIs
     app.add_route('/', RootResource())
+    app.add_route('/category', CategoryCollection())
+    app.add_route('/category/{id_:int}', CategoryResource())
     app.add_route('/message', MessageCollection())
     app.add_route('/message/{id_:int}', MessageResource())
 

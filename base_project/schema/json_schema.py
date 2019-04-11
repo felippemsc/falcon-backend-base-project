@@ -79,3 +79,20 @@ class SchemaMessage(Schema):
             "message", "message_category"
         ]
     }
+
+
+class SchemaCategory(Schema):
+    """
+    JSON Schema that represents a Message.
+    """
+    schema_dict = {
+        "$json_schema": "http://json-json_schema.org/json_schema#",
+        "type": "object",
+        "properties": {
+            "id": {"type": "integer"},
+            "name": {"type": "string"}
+        },
+        "required": [
+            "name"
+        ]
+    }
