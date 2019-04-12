@@ -32,7 +32,7 @@ class Message(BaseModel):
     message = Column("message", Text, nullable=False, unique=True)
     duration = Column("dur_message", Integer, nullable=True)
     creation_date = Column("dh_message", DateTime, default=func.now())
-    category_id = Column("id_category", Integer,
+    category_id = Column("id_category_fk", Integer,
                          ForeignKey('category.id_category'), nullable=False)
     printed_times = Column("prt_message", Integer, default=0)
     printed_once = Column("bol_message", Boolean, default=False)
