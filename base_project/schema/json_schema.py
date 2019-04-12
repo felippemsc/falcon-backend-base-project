@@ -71,12 +71,12 @@ class SchemaMessage(Schema):
             "id": {"type": "integer"},
             "message": {"type": "string"},
             "duration": {"type": ["integer", "null"]},
-            "message_category": {"type": "string"},
+            "category_id": {"type": "integer"},
             "printed_times": {"type": "integer"},
             "printed_once": {"type": "boolean"},
         },
         "required": [
-            "message", "message_category"
+            "message", "category_id"
         ]
     }
 

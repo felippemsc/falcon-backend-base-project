@@ -36,8 +36,8 @@ class ExceptionHandler(Exception):
             logger.exception("Unauthorized Error of request on %s: ", log_msg)
             ex = falcon.HTTPUnauthorized(description=str(ex))
         elif isinstance(ex, IntegrityError):
-            logger.exception("Database integrity error violation when handling %s", log_msg)  # noqa
-            ex = falcon.HTTPBadRequest(description=str(ex.orig.pgerror))
+            logger.warning("Database integrity error violation when handling %s: %s", log_msg, str(ex.orig.pgerror))  # noqa
+            ex = falcon.HTTPBadRequest(description="Database integrity error violation")  # noqa
         else:
             logger.exception("Unexpected Error during handling the %s: ", log_msg)  # noqa
             ex = falcon.HTTPInternalServerError()

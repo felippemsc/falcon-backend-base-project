@@ -17,7 +17,7 @@ DATE_FORMAT = "%Y-%m-%d"
 
 class Category(BaseModel):
     """
-    Message's Model
+    Category's Model
     """
     _json_schema = SchemaCategory
     _query_schema = SchemaBaseQuery

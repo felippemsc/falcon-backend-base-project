@@ -4,6 +4,7 @@ import logging
 from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY, HTTP_BAD_REQUEST, HTTP_OK, HTTP_NOT_FOUND
 
 from base_project.models.category import Category
+from base_project.models.message import Message
 
 from tests import BaseTest, encode_base_auth_header
 
@@ -21,6 +22,7 @@ class TestAPICategory(BaseTest):
         super().setUp()
 
         self.populate_table(Category, 'category.jsonl')
+        self.populate_table(Message, 'message.jsonl')
 
     def test_post_unauthorized(self):
         response = self.simulate_post(self.endpoint, headers={**self.headers})

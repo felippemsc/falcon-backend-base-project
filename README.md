@@ -4,6 +4,7 @@ This is a base project using The Falcon Web Framework
 
 ## TODO: 
 * Nest message and category 
+https://docs.sqlalchemy.org/en/latest/orm/basic_relationships.html
 * Include url
 * Add features for printed_times and printed_once
 * Check and improve log messages (Rethink the Exception Handlers)
