@@ -9,9 +9,12 @@ with open(os.path.join(here, "README.md")) as f:
     long_description = f.read()
 
 requires = [
+    'astroid==2.2.0',
     'falcon==1.4.1',
     'gunicorn==19.9.0',
     'jsonschema==2.6.0',
+    'pycodestyle==2.3.1',
+    'pylint==2.3.0',
     'psycopg2-binary==2.7.6.1',
     'simple_json_log_formatter==0.5.3',
     'SQLAlchemy==1.2.15',

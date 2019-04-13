@@ -5,14 +5,12 @@ Base Models
 
 Author: Felippe Costa <felippemsc@gmail.com>
 """
-from datetime import datetime, date
-from decimal import Decimal
+from datetime import datetime
 
 from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy.exc import IntegrityError
 
 from ..database import BASE, DBSESSION
-
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 DATE_FORMAT = "%Y-%m-%d"

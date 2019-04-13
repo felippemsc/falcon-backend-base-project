@@ -11,7 +11,6 @@ from falcon import HTTP_CREATED, HTTP_NOT_FOUND
 
 from ..models.category import Category
 
-
 LOG = logging.getLogger()
 
 

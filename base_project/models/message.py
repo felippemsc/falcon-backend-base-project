@@ -5,9 +5,11 @@ ORM of Base Project: message model.
 
 Author: Felippe Costa <felippemsc@gmail.com>
 """
-from sqlalchemy import Integer, Text, DateTime, Boolean, func
+from sqlalchemy import Integer, Text, DateTime, Boolean, func, ForeignKey
 from sqlalchemy.schema import Column
+from sqlalchemy.orm import relationship, backref
 
+from ..database import DBSESSION
 from ..models import BaseModel
 from ..schema.json_schema import SchemaBaseQuery, SchemaMessage
 
@@ -23,7 +25,7 @@ class Message(BaseModel):
     _query_schema = SchemaBaseQuery
     __tablename__ = 'message'
     serializer_fields = [
-        "id", "message", "duration", "creation_date", "message_category",
+        "id", "message", "duration", "creation_date", "category_id",
         "printed_times", "printed_once"
     ]
 
@@ -31,6 +33,23 @@ class Message(BaseModel):
     message = Column("message", Text, nullable=False, unique=True)
     duration = Column("dur_message", Integer, nullable=True)
     creation_date = Column("dh_message", DateTime, default=func.now())
-    message_category = Column("cat_message", Text, nullable=False)
+    category_id = Column("id_category_fk", Integer,
+                         ForeignKey('category.id_category'), nullable=False)
     printed_times = Column("prt_message", Integer, default=0)
     printed_once = Column("bol_message", Boolean, default=False)
+
+    category = relationship("Category", backref=backref("message",
+                                                        lazy="joined"))
+
+    @classmethod
+    def get_by_category(cls, category_id: int):
+        """
+        Retrives all the messages for a given category
+
+        :return: serialized list of messages
+        """
+        instance_list = DBSESSION.query(cls)
+        instance_list = instance_list.filter(cls.category_id == category_id)
+        instance_list = instance_list.all()
+
+        return cls.serialize_list(instance_list)

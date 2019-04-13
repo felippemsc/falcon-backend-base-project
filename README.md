@@ -3,8 +3,9 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Nest message and category 
+* Nested serialization of messages and categories
 * Include url
+* Implement pagination on Category Resource for Messages
 * Add features for printed_times and printed_once
 * Check and improve log messages (Rethink the Exception Handlers)
 * Create CI script

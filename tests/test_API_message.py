@@ -3,6 +3,7 @@ import logging
 
 from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY, HTTP_BAD_REQUEST, HTTP_OK, HTTP_NOT_FOUND
 
+from base_project.models.category import Category
 from base_project.models.message import Message
 
 from tests import BaseTest, encode_base_auth_header
@@ -20,6 +21,7 @@ class TestAPIMessage(BaseTest):
     def setUp(self):
         super().setUp()
 
+        self.populate_table(Category, 'category.jsonl')
         self.populate_table(Message, 'message.jsonl')
 
     def test_post_unauthorized(self):
@@ -30,7 +32,7 @@ class TestAPIMessage(BaseTest):
     def test_post_missing_required_fields(self):
         message = {
             "duration": 5,
-            "message_category": "Information"
+            "category_id": 1
         }
 
         response = self.simulate_post(
@@ -44,7 +46,7 @@ class TestAPIMessage(BaseTest):
         message = {
             "message": "Measuring distance",
             "duration": "5",
-            "message_category": "Information"
+            "category_id": 1
         }
 
         response = self.simulate_post(
@@ -59,7 +61,7 @@ class TestAPIMessage(BaseTest):
         message = {
             "message": "Welcome to IoT",
             "duration": 5,
-            "message_category": "Information"
+            "category_id": 1
         }
 
         response = self.simulate_post(
@@ -74,7 +76,7 @@ class TestAPIMessage(BaseTest):
         message = {
             "message": "Measuring distance",
             "duration": 5,
-            "message_category": "Information"
+            "category_id": 1
         }
 
         response = self.simulate_post(
@@ -87,7 +89,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Measuring distance", resp_message.get('message'))
         self.assertEqual(5, resp_message.get('duration'))
-        self.assertEqual("Information", resp_message.get('message_category'))
+        self.assertEqual(1, resp_message.get('category_id'))
 
     def test_get_collection_unauthorized(self):
         response = self.simulate_get(self.endpoint, headers={**self.headers})
@@ -105,7 +107,7 @@ class TestAPIMessage(BaseTest):
         message = {
             "message": "Measuring distance",
             "duration": 5,
-            "message_category": "Information"
+            "category_id": 1
         }
 
         response = self.simulate_post(
@@ -203,7 +205,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Patch Test", resp_message.get('message'))
         self.assertEqual(999, resp_message.get('duration'))
-        self.assertEqual("Information", resp_message.get('message_category'))
+        self.assertEqual(1, resp_message.get('category_id'))
 
         message = {
             "duration": 123
@@ -219,7 +221,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Patch Test", resp_message.get('message'))
         self.assertEqual(123, resp_message.get('duration'))
-        self.assertEqual("Information", resp_message.get('message_category'))
+        self.assertEqual(1, resp_message.get('category_id'))
 
     def test_patch_invalid_id(self):
         message = {

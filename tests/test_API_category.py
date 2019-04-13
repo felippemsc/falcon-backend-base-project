@@ -4,6 +4,7 @@ import logging
 from falcon import HTTP_CREATED, HTTP_UNPROCESSABLE_ENTITY, HTTP_BAD_REQUEST, HTTP_OK, HTTP_NOT_FOUND
 
 from base_project.models.category import Category
+from base_project.models.message import Message
 
 from tests import BaseTest, encode_base_auth_header
 
@@ -21,6 +22,7 @@ class TestAPICategory(BaseTest):
         super().setUp()
 
         self.populate_table(Category, 'category.jsonl')
+        self.populate_table(Message, 'message.jsonl')
 
     def test_post_unauthorized(self):
         response = self.simulate_post(self.endpoint, headers={**self.headers})
@@ -159,12 +161,19 @@ class TestAPICategory(BaseTest):
         self.assertEqual(401, response.status_code)
 
     def test_delete(self):
-        response = self.simulate_delete(f'{self.endpoint}/1',
+        response = self.simulate_delete(f'{self.endpoint}/2',
                                         headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
 
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("msg", response.json)
         self.assertIn("category", response.json)
+
+    def test_delete_used_category(self):
+        response = self.simulate_delete(f'{self.endpoint}/1',
+                                        headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_BAD_REQUEST)
+        self.assertIn("description", response.json)
 
     def test_delete_invalid_id(self):
         response = self.simulate_delete(f'{self.endpoint}/999',
@@ -183,7 +192,7 @@ class TestAPICategory(BaseTest):
         }
 
         response = self.simulate_patch(
-            f'{self.endpoint}/1', json=category, headers={**self.headers,
+            f'{self.endpoint}/2', json=category, headers={**self.headers,
                                                           **{'Authorization': encode_base_auth_header('xpto')}}
         )
 
@@ -191,6 +200,19 @@ class TestAPICategory(BaseTest):
 
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Error", resp_category.get('name'))
+
+    def test_patch_used_category(self):
+        category = {
+            "name": "Error"
+        }
+
+        response = self.simulate_patch(
+            f'{self.endpoint}/1', json=category, headers={**self.headers,
+                                                          **{'Authorization': encode_base_auth_header('xpto')}}
+        )
+
+        self.assertEqual(response.status, HTTP_BAD_REQUEST)
+        self.assertIn("description", response.json)
 
     def test_patch_invalid_id(self):
         category = {
@@ -210,8 +232,8 @@ class TestAPICategory(BaseTest):
         }
 
         response = self.simulate_patch(
-            f'{self.endpoint}/1', json=category, headers={**self.headers,
-                                                         **{'Authorization': encode_base_auth_header('xpto')}}
+            f'{self.endpoint}/2', json=category, headers={**self.headers,
+                                                          **{'Authorization': encode_base_auth_header('xpto')}}
         )
 
         self.assertEqual(response.status, HTTP_UNPROCESSABLE_ENTITY)

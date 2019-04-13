@@ -12,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 
 from .schema.json_schema import InvalidJSON
 from .middleware import UnauthorizedException
+from .models.category import ProtectedCategory
 
 
 # pylint: disable=C0301
@@ -36,8 +37,11 @@ class ExceptionHandler(Exception):
             logger.exception("Unauthorized Error of request on %s: ", log_msg)
             ex = falcon.HTTPUnauthorized(description=str(ex))
         elif isinstance(ex, IntegrityError):
-            logger.exception("Database integrity error violation when handling %s", log_msg)  # noqa
-            ex = falcon.HTTPBadRequest(description=str(ex.orig.pgerror))
+            logger.exception("Database integrity error violation when handling %s: %s", log_msg, str(ex.orig.pgerror))  # noqa
+            ex = falcon.HTTPBadRequest(description="Database integrity error violation")  # noqa
+        elif isinstance(ex, ProtectedCategory):
+            logger.exception("Cannot update/delete this record of Category %s: ", log_msg)  # noqa
+            ex = falcon.HTTPBadRequest(description=str(ex))
         else:
             logger.exception("Unexpected Error during handling the %s: ", log_msg)  # noqa
             ex = falcon.HTTPInternalServerError()
@@ -49,7 +53,7 @@ class ExceptionHandler(Exception):
         try:
             payload = req.media
             payload_msg = f"with payload: {payload}"
-        except Exception:
+        except falcon.HTTPBadRequest:
             payload_msg = "without payload"
 
         return payload_msg
