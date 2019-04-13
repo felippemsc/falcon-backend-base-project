@@ -89,7 +89,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Measuring distance", resp_message.get('message'))
         self.assertEqual(5, resp_message.get('duration'))
-        self.assertEqual(1, resp_message.get('category_id'))
+        self.assertEqual(1, resp_message.get('category').get('id'))
 
     def test_get_collection_unauthorized(self):
         response = self.simulate_get(self.endpoint, headers={**self.headers})
@@ -205,7 +205,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Patch Test", resp_message.get('message'))
         self.assertEqual(999, resp_message.get('duration'))
-        self.assertEqual(1, resp_message.get('category_id'))
+        self.assertEqual(1, resp_message.get('category').get('id'))
 
         message = {
             "duration": 123
@@ -221,7 +221,7 @@ class TestAPIMessage(BaseTest):
         self.assertEqual(response.status, HTTP_CREATED)
         self.assertEqual("Patch Test", resp_message.get('message'))
         self.assertEqual(123, resp_message.get('duration'))
-        self.assertEqual(1, resp_message.get('category_id'))
+        self.assertEqual(1, resp_message.get('category').get('id'))
 
     def test_patch_invalid_id(self):
         message = {

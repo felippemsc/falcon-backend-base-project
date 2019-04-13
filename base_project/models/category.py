@@ -28,7 +28,7 @@ class Category(BaseModel):
     _query_schema = SchemaBaseQuery
     __tablename__ = 'category'
     serializer_fields = [
-        "id", "name"
+        "id", "name", "messages"
     ]
 
     id = Column("id_category", Integer, primary_key=True, autoincrement=True)

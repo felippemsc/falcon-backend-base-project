@@ -148,6 +148,7 @@ class TestAPICategory(BaseTest):
 
         self.assertEqual(response.status, HTTP_OK)
         self.assertIn("category", response.json)
+        self.assertEqual(2, len(response.json.get('category').get('messages')))
 
     def test_get_resource_not_found(self):
         response = self.simulate_get(f'{self.endpoint}/999',

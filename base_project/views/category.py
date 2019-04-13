@@ -55,7 +55,8 @@ class CategoryResource:
             response.status = HTTP_NOT_FOUND
             return
 
-        response.body = json.dumps({"category": category.serialize()})
+        response.body = json.dumps(
+            {"category": category.serialize(serialize_children=True)})
 
     def on_delete(self, request, response, id_):  # pylint: disable=W0613
         """

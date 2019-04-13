@@ -1,6 +1,5 @@
 # coding: utf-8
 """
-
 Base Models
 
 Author: Felippe Costa <felippemsc@gmail.com>
@@ -9,6 +8,7 @@ from datetime import datetime
 
 from sqlalchemy.ext.declarative import AbstractConcreteBase
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm.collections import InstrumentedList
 
 from ..database import BASE, DBSESSION
 
@@ -28,10 +28,10 @@ class BaseModel(AbstractConcreteBase, BASE):
     @classmethod
     def validate_and_init(cls, data: dict):
         """
-        Validates and instanciates an object class using the dict values.
+        Validates and instantiates an object class using the dict values.
 
-        :param data: dictonary with data
-        :return: instanciated object
+        :param data: dictionary with data
+        :return: instantiated object
         """
         cls._json_schema.validate(data)
         instance = cls()
@@ -47,8 +47,8 @@ class BaseModel(AbstractConcreteBase, BASE):
     def validate_and_record(cls, data: dict):
         """
         Validates and record a new registry
-        :param data: dictonary with data
-        :return: instanciated object
+        :param data: dictionary with data
+        :return: instantiated object
         """
         instance = cls.validate_and_init(data)
 
@@ -58,8 +58,8 @@ class BaseModel(AbstractConcreteBase, BASE):
     def validate_and_update(self, data: dict):
         """
         Validates and updates a new registry
-        :param data: dictonary with data
-        :return: instanciated object
+        :param data: dictionary with data
+        :return: instantiated object
         """
         self._json_schema.validate(data, drop_required_fields=True)
 
@@ -74,7 +74,8 @@ class BaseModel(AbstractConcreteBase, BASE):
     @classmethod
     def get_list(cls, url_params: dict):
         """
-        Retrives the records of a model's table paginated with limit and offset
+        Retrieves the records of a model's table paginated with limit and
+        offset
 
         :return: serialized list of instances
         """
@@ -97,7 +98,7 @@ class BaseModel(AbstractConcreteBase, BASE):
     @classmethod
     def get_by_id(cls, id_: int):
         """
-        Retrives a record by its id
+        Retrieves a record by its id
 
         :param id_:
         :return: serialized instance
@@ -107,33 +108,56 @@ class BaseModel(AbstractConcreteBase, BASE):
         return instance
 
     @staticmethod
-    def serialize_list(list_of_instances):
+    def serialize_list(list_of_instances: list,
+                       serialize_children: bool = False,
+                       drop_parents: bool = False):
         """
         Serializes a list of instances
 
+        :param list_of_instances: list of the instances to be serialized
+        :param serialize_children: if the children relationships should be
+                                   serialized
+        :param drop_parents: if the parents relationships should be dropped
+                             on the serialization
         :return: list of dicts
         """
         serialized_list = []
         for instance in list_of_instances:
-            serialized_list.append(instance.serialize())
+            serialized_list.append(instance.serialize(serialize_children,
+                                                      drop_parents))
 
         return serialized_list
 
-    def serialize(self):
+    def serialize(self, serialize_children: bool = False,
+                  drop_parents: bool = False):
         """
         Serialize an instance of a model record
 
+        :param serialize_children: if serializes the children relationships
+                                   or not
+        :param drop_parents: if drops the parents relationships or not
         :return: dict
         """
         result = dict()
 
         for key in self.serializer_fields:
-            instance_value = getattr(self, key, None)
+            inst_value = getattr(self, key, None)
 
-            if isinstance(instance_value, datetime):
-                instance_value = instance_value.strftime(DATETIME_FORMAT)
+            if isinstance(inst_value, datetime):
+                inst_value = inst_value.strftime(DATETIME_FORMAT)
+            if isinstance(inst_value, InstrumentedList):
+                if serialize_children:
+                    inst_value = BaseModel.serialize_list(inst_value,
+                                                          drop_parents=True)
+                else:
+                    continue
+            if isinstance(inst_value, BaseModel):
+                if not drop_parents:
+                    inst_value = inst_value.serialize(False)
+                else:
+                    continue
 
-            result[key] = instance_value
+            result[key] = inst_value
 
         return result
 

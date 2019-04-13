@@ -25,8 +25,8 @@ class Message(BaseModel):
     _query_schema = SchemaBaseQuery
     __tablename__ = 'message'
     serializer_fields = [
-        "id", "message", "duration", "creation_date", "category_id",
-        "printed_times", "printed_once"
+        "id", "message", "duration", "creation_date", "printed_times",
+        "printed_once", "category"
     ]
 
     id = Column("id_message", Integer, primary_key=True, autoincrement=True)
@@ -34,11 +34,11 @@ class Message(BaseModel):
     duration = Column("dur_message", Integer, nullable=True)
     creation_date = Column("dh_message", DateTime, default=func.now())
     category_id = Column("id_category_fk", Integer,
-                         ForeignKey('category.id_category'), nullable=False)
+                         ForeignKey("category.id_category"), nullable=False)
     printed_times = Column("prt_message", Integer, default=0)
     printed_once = Column("bol_message", Boolean, default=False)
 
-    category = relationship("Category", backref=backref("message",
+    category = relationship("Category", backref=backref("messages",
                                                         lazy="joined"))
 
     @classmethod
