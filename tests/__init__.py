@@ -37,11 +37,11 @@ class TestLogger(testing.TestCase):
         """
         Configures the log for testing.
 
-        To cleanner output the level is set to the highest.
+        To cleaner output the level is set to the highest.
 
         Level could be changed for more details during the tests.
 
-        It is possible to override this fucntion to change the log level for specific tests.
+        It is possible to override this function to change the log level for specific tests.
         """
         LOG.level = logging.CRITICAL
         LOG.addHandler(self.tests_handler)

@@ -3,7 +3,6 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Check and improve log messages (Rethink the Exception Handlers)
 * Create CI script
 * Create CD script to push to ECR
 * Put images at the README
