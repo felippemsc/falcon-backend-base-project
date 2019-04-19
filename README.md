@@ -3,10 +3,9 @@
 This is a base project using The Falcon Web Framework
 
 ## TODO: 
-* Implement pagination on Category Resource for Messages
-* Add features for printed_times and printed_once
 * Check and improve log messages (Rethink the Exception Handlers)
 * Create CI script
+* Create CD script to push to ECR
 * Put images at the README
 
 

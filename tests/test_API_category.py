@@ -150,6 +150,22 @@ class TestAPICategory(BaseTest):
         self.assertIn("category", response.json)
         self.assertEqual(2, len(response.json.get('category').get('messages')))
 
+    def test_get_resource_limit(self):
+        response = self.simulate_get(f'{self.endpoint}/1', query_string="limit=1",
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("category", response.json)
+        self.assertEqual(1, len(response.json.get('category').get('messages')))
+
+    def test_get_resource_offset(self):
+        response = self.simulate_get(f'{self.endpoint}/1', query_string="offset=2",
+                                     headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})
+
+        self.assertEqual(response.status, HTTP_OK)
+        self.assertIn("category", response.json)
+        self.assertEqual(0, len(response.json.get('category').get('messages')))
+
     def test_get_resource_not_found(self):
         response = self.simulate_get(f'{self.endpoint}/999',
                                      headers={**self.headers, **{'Authorization': encode_base_auth_header('xpto')}})

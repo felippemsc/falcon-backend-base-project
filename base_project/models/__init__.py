@@ -128,16 +128,46 @@ class BaseModel(AbstractConcreteBase, BASE):
 
         return serialized_list
 
+    @classmethod
+    def get_children_limit_and_offset(cls, children_params: dict = None):
+        """
+        Evaluate the children limit and offset to be serialized
+
+        :param children_params: dict with limit and offset to serialize the
+                                children
+        :return: limit, offset
+        """
+        if children_params:
+            cls._query_schema.validate(children_params)
+
+            limit = children_params.get('limit')
+            if limit is None or int(limit) > 100:
+                limit = 100
+
+            offset = children_params.get('offset')
+            if offset is None:
+                offset = 0
+
+            return int(limit), int(offset)
+
+        return 100, 0
+
     def serialize(self, serialize_children: bool = False,
-                  drop_parents: bool = False):
+                  drop_parents: bool = False,
+                  children_params: dict = None):
         """
         Serialize an instance of a model record
 
         :param serialize_children: if serializes the children relationships
                                    or not
         :param drop_parents: if drops the parents relationships or not
+        :param children_params: dict with limit and offset to serialize the
+                                children
         :return: dict
         """
+        child_limit, child_offset = self.get_children_limit_and_offset(
+            children_params)
+
         result = dict()
 
         for key in self.serializer_fields:
@@ -147,8 +177,9 @@ class BaseModel(AbstractConcreteBase, BASE):
                 inst_value = inst_value.strftime(DATETIME_FORMAT)
             if isinstance(inst_value, InstrumentedList):
                 if serialize_children:
-                    inst_value = BaseModel.serialize_list(inst_value,
-                                                          drop_parents=True)
+                    inst_value = BaseModel.serialize_list(
+                        inst_value[child_offset:child_offset + child_limit],
+                        drop_parents=True)
                 else:
                     continue
             if isinstance(inst_value, BaseModel):

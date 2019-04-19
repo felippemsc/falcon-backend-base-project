@@ -50,13 +50,16 @@ class CategoryResource:
         """
         API to retrieve one message by its id
         """
+        url_params = request.params
+
         category = Category.get_by_id(id_)
         if not category:
             response.status = HTTP_NOT_FOUND
             return
 
         response.body = json.dumps(
-            {"category": category.serialize(serialize_children=True)})
+            {"category": category.serialize(serialize_children=True,
+                                            children_params=url_params)})
 
     def on_delete(self, request, response, id_):  # pylint: disable=W0613
         """
