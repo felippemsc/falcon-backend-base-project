@@ -9,6 +9,8 @@ services:
       DB_PASSWORD: password
     ports:
     - "8080:8080"
+    command:
+      sh ./sleep_and_run.sh
 
   database:
     image: postgres:9.6.6-alpine
@@ -18,8 +20,3 @@ services:
       POSTGRES_PASSWORD: password
     ports:
       - "5432:5432"
-
-  memcached:
-    image: memcached:1.5.8-alpine
-    ports:
-    - "11211:11211"

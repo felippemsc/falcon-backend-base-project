@@ -10,6 +10,7 @@ with open(os.path.join(here, "README.md")) as f:
 
 requires = [
     'astroid==2.2.0',
+    'click==6.7',
     'falcon==1.4.1',
     'gunicorn==19.9.0',
     'jsonschema==2.6.0',
