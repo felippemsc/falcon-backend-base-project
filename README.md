@@ -78,7 +78,6 @@ At the terminal:
 This will run the tests and emmit a coverage report
 
 ## TODO: 
-* Add the dumping to db for the first time run (Add the feature at main.py and the explanation on Readme)
 * Create CI script
 https://docs.travis-ci.com/user/docker/
 https://github.com/codecov/example-python

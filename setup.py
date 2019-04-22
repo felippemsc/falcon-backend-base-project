@@ -18,7 +18,7 @@ requires = [
     'pylint==2.3.0',
     'psycopg2-binary==2.7.6.1',
     'simple_json_log_formatter==0.5.3',
-    'SQLAlchemy==1.2.15',
+    'SQLAlchemy==1.3.0',
     'SQLAlchemy-Utils==0.33.10'
 ]
 
